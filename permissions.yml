@@ -1,0 +1,18 @@
+user:
+  permissions:
+    permissions.ex: false
+  groups:
+    - admin
+groups:
+  default:
+    permissions:
+      permissions.pickup: false
+  admin:
+    permission:
+      permission.*: true
+    inheritance:
+      - user
+    user:
+      permissions:
+        permission.pickup: false
+debug: false

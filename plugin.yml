@@ -1,0 +1,9 @@
+name: PvPBox
+version: 2
+main: fr.reborned.pvpbox.Main
+description: Le plugin du PvpBox
+author: Reborned
+commands:
+  Pvp:
+    description: Commande 1
+    permission: box.use

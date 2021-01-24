@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="TestPvpPl">
+    <output-path>$PROJECT_DIR$/out/artifacts/TestPvpPl</output-path>
+    <root id="archive" name="TestPvpPl.jar">
+      <element id="module-output" name="TestPvpPl" />
+      <element id="file-copy" path="$PROJECT_DIR$/permissions.yml" />
+      <element id="file-copy" path="$PROJECT_DIR$/plugin.yml" />
+    </root>
+  </artifact>
+</component>
