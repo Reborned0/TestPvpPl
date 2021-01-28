@@ -1,6 +1,6 @@
 package fr.reborned.pvpbox.Grade;
 
-import fr.reborned.pvpbox.dbconnection.Connected;
+import fr.reborned.pvpbox.dbconnection.RequestSQL;
 
 import java.util.ArrayList;
 
@@ -23,8 +23,8 @@ public class Grades {
     }
 
     private void remplissageArray(){
-        Connected connected = new Connected();
-        ArrayList<Grades> grades1 = connected.listGrade();
+        RequestSQL requestSQL = new RequestSQL();
+        ArrayList<Grades> grades1 = requestSQL.listGrade();
         if (!grades1.isEmpty()){
             this.grades.addAll(grades1);
         }

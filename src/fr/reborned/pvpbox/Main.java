@@ -2,10 +2,8 @@ package fr.reborned.pvpbox;
 
 import fr.reborned.pvpbox.commands.CommandPvpBox;
 import fr.reborned.pvpbox.dbconnection.DbConnect;
-import fr.reborned.pvpbox.fileconfig.Fichier;
+import fr.reborned.pvpbox.fileconfig.FileManager;
 import fr.reborned.pvpbox.pluginlistener.PluginListener;
-import fr.reborned.pvpbox.sign.SignListener;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
@@ -23,7 +21,9 @@ public class Main extends JavaPlugin {
     }
     public void onLoad(){
         DbConnect dbConnect = new DbConnect();
-        dbConnect.getInfo(this);
+        dbConnect.setInfo(this);
+        dbConnect.loadConfigDB(this);
+        dbConnect.creationDB(this);
     }
 
     public void onDisable() {
@@ -31,8 +31,10 @@ public class Main extends JavaPlugin {
     }
 
     private void AjoutFichier(){
-        final Fichier fichier = new Fichier(this.getDataFolder(),"/configpl.yml");
-        fichier.ajoutFichierVide();
+        final FileManager fileManager = new FileManager(this.getDataFolder(),"/configpl.yml");
+        fileManager.ajoutFichierVide();
+        final FileManager fileManager1 = new FileManager(this.getDataFolder(),"/PluginPvpBox.sql");
+        fileManager1.ajoutSqlFile();
     }
 }
 

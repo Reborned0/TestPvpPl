@@ -1,16 +1,14 @@
 package fr.reborned.pvpbox.joueur;
 
 import fr.reborned.pvpbox.Main;
-import fr.reborned.pvpbox.fileconfig.Fichier;
+import fr.reborned.pvpbox.fileconfig.FileManager;
 import fr.reborned.pvpbox.fileconfig.ListType;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -21,16 +19,6 @@ import java.util.ArrayList;
 public abstract class Joueur {
 
     private int sizeofarrayArmor=0;
-    private Location L1;
-    private Location L2;
-
-    public Location getL1() {
-        return L1;
-    }
-
-    public Location getL2() {
-        return L2;
-    }
 
     private String grade;
     private Statistiques statistiques;
@@ -62,7 +50,6 @@ public abstract class Joueur {
         unJoueur.updateInventory();
     }
     private File fileConfig() {
-
         return new File(this.main.getDataFolder(),"configpl.yml");
     }
 
@@ -164,14 +151,6 @@ public abstract class Joueur {
         this.statistiques = statistiques;
     }
 
-    public void setL1(Location l1) {
-        L1 = l1;
-    }
-
-    public void setL2(Location l2) {
-        L2 = l2;
-    }
-
     public void swordsetter(Player player){
         ItemStack item = new ItemStack(Material.WOOD_SWORD);
         ItemMeta itemMeta = item.getItemMeta();
@@ -183,8 +162,9 @@ public abstract class Joueur {
         player.getInventory().setItemInMainHand(item);
         player.updateInventory();
     }
+
     public void saveInfile(String key, Location o){
-        Fichier fichier = new Fichier(this.main.getDataFolder(),"configpl.yml");
-        fichier.saveInFile(key,o);
+        FileManager fileManager = new FileManager(this.main.getDataFolder(),"configpl.yml");
+        fileManager.saveInFile(key,o);
     }
 }

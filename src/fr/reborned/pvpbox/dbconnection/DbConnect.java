@@ -1,6 +1,7 @@
 package fr.reborned.pvpbox.dbconnection;
 
-import fr.reborned.pvpbox.fileconfig.Fichier;
+import fr.reborned.pvpbox.fileconfig.FileManager;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
@@ -8,10 +9,11 @@ import java.io.*;
 import java.sql.*;
 
 public class DbConnect {
+
     /**
      * URL de connection
      */
-    private static String url = "jdbc:mysql://192.168.1.167:3306/PluginPvpBox";
+    private static String url = "jdbc:mysql://192.168.1.2:3306/PluginPvpBox";
 
     /**
      * Nom du user
@@ -30,7 +32,7 @@ public class DbConnect {
 
     /**
      * Méthode qui va nous retourner notre instance
-     * et la crÃ©er si elle n'existe pas...
+     * et la creer si elle n'existe pas...
      * @return un objet connection
      */
     public static Connection getInstance(){
@@ -47,7 +49,7 @@ public class DbConnect {
     /**
      * Méthode qui met fin à la connexion
      */
-    public static void close() {
+    public void close() {
         if (connect != null) {
             try {
                 connect.close();
@@ -57,18 +59,15 @@ public class DbConnect {
         }
     }
 
-    public void getInfo(Plugin plugin){
-        final Fichier fichier = new Fichier(plugin.getDataFolder(),"/configdb.yml");
-        YamlConfiguration yamlConfiguration = YamlConfiguration.loadConfiguration(fichier);
+    public void setInfo(Plugin plugin){
+        final FileManager fileManager = new FileManager(plugin.getDataFolder(),"/configdb.yml");
+        YamlConfiguration yamlConfiguration = YamlConfiguration.loadConfiguration(fileManager);
 
         try {
-            fichier.getParentFile().mkdirs();
-            if (fichier.createNewFile()){
-                if (fichierVide(fichier.getAbsoluteFile())){
-                    fichier.remplissageFileDb(fichier);
-                    if (creationDB(plugin)){
-                        System.out.println("DB Check");
-                    }
+            fileManager.getParentFile().mkdirs();
+            if (fileManager.createNewFile()){
+                if (fichierVide(fileManager.getAbsoluteFile())){
+                    fileManager.remplissageFileDb(fileManager);
                 }
             }
         } catch (IOException e) {
@@ -92,21 +91,44 @@ public class DbConnect {
         File file = new File(plugin.getDataFolder(),"/PluginPvpBox.sql");
         Connection connection = getInstance();
         ScriptRunner scriptRunner = new ScriptRunner(connection);
+
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT `schema_name` from INFORMATION_SCHEMA.SCHEMATA WHERE `SCHEMA_NAME` LIKE '%Pl%'");
             if (statement.executeQuery().first()){
+                System.out.println("test");
                 ret =true;
             }else
             {
-                Reader reader = new BufferedReader(new FileReader(file.getAbsolutePath()+"/PluginPvpBox.sql"));
+                Reader reader = new BufferedReader(new FileReader(file.getAbsolutePath()));
                 scriptRunner.runScript(reader);
             }
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
 
-
         return ret;
+    }
+
+    public void setUrl(String url) {
+        DbConnect.url = url;
+    }
+
+    public void setUser(String user) {
+        DbConnect.user = user;
+    }
+
+    public void setPasswd(String passwd) {
+        DbConnect.passwd = passwd;
+    }
+
+    public void loadConfigDB(Plugin plugin){
+        String key ="Connection";
+        File file = new File(plugin.getDataFolder(),"configdb.yml");
+        YamlConfiguration conf = YamlConfiguration.loadConfiguration(file);
+        ConfigurationSection confS = conf.getConfigurationSection(key);
+        setUser(confS.getString("user"));
+        setPasswd(confS.getString("passwd"));
+        setUrl(confS.getString("url"));
     }
 
 }

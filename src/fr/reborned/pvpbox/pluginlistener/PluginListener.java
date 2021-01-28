@@ -1,11 +1,9 @@
 package fr.reborned.pvpbox.pluginlistener;
 
 import fr.reborned.pvpbox.Main;
-import fr.reborned.pvpbox.dbconnection.Connected;
-import fr.reborned.pvpbox.fileconfig.Fichier;
+import fr.reborned.pvpbox.dbconnection.RequestSQL;
 import fr.reborned.pvpbox.joueur.Joueur;
 import fr.reborned.pvpbox.joueur.Teleportation;
-import org.apache.logging.log4j.core.net.Priority;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -13,16 +11,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.weather.ThunderChangeEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
-import org.bukkit.inventory.ItemStack;
-
-import javax.swing.text.html.parser.Entity;
 
 public class PluginListener extends Joueur implements Listener {
 
@@ -32,9 +26,9 @@ public class PluginListener extends Joueur implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onJoin(PlayerJoinEvent e) {
-        Connected connected = new Connected();
+        RequestSQL requestSQL = new RequestSQL();
         if (e.getPlayer() != null) {
-            connected.findByNameAndUUID(e.getPlayer().getDisplayName(),e.getPlayer().getUniqueId().toString());
+            requestSQL.findByNameAndUUID(e.getPlayer().getName(),e.getPlayer().getUniqueId().toString());
             playerjoining(e.getPlayer());
         }
     }
@@ -87,8 +81,8 @@ public class PluginListener extends Joueur implements Listener {
     @EventHandler
     public void onDeconnection(PlayerQuitEvent e){
         if (e.getPlayer() != null){
-            Connected connected = new Connected();
-            connected.register(e.getPlayer(),getStatistiques(),getGrade());
+            RequestSQL requestSQL = new RequestSQL();
+            requestSQL.register(e.getPlayer(),getStatistiques(),getGrade());
         }
     }
 

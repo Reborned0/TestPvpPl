@@ -3,12 +3,14 @@ package fr.reborned.pvpbox.commands;
 import fr.reborned.pvpbox.Main;
 import fr.reborned.pvpbox.joueur.Joueur;
 import fr.reborned.pvpbox.pluginlistener.Cuboid;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -43,14 +45,15 @@ public class CommandPvpBox extends Joueur implements TabExecutor {
                     if (!args[1].isEmpty()) {
                         switch (args[1].toLowerCase()) {
                             case "respawnpoint":
-
                                 key = "respawn.";
                                 Location location = joueur.getLocation();
 
+
+
                                 yamlConfiguration.set(key + "world", location.getWorld().getName());
-                                yamlConfiguration.set(key + "X", location.getX());
-                                yamlConfiguration.set(key + "Y", location.getY());
-                                yamlConfiguration.set(key + "Z", location.getZ());
+                                yamlConfiguration.set(key + "x", location.getX());
+                                yamlConfiguration.set(key + "y", location.getY());
+                                yamlConfiguration.set(key + "z", location.getZ());
                                 yamlConfiguration.set(key + "Yaw", location.getYaw());
                                 yamlConfiguration.set(key + "Pitch", location.getPitch());
 
@@ -62,22 +65,21 @@ public class CommandPvpBox extends Joueur implements TabExecutor {
                                 }
                                 break;
                             case "region":
+                                key="Locations";
+                                final ConfigurationSection confiSection = yamlConfiguration.getConfigurationSection(key);
+                                ArrayList<Location> Locations = new ArrayList<Location>();
+                                    for (String locaString : confiSection.getKeys(false)){
 
-                                key = "region.";
-                                System.out.println("Loc 1 : "+ getL1() + "loc 2 :"+ this.getL2());
-                                Cuboid cuboid = new Cuboid(this.getL1(),this.getL2());
-
-
-                                yamlConfiguration.set(key + "cuboidL1", getL1());
-                                yamlConfiguration.set(key + "cuboidL2", getL2());
-
-                                try {
-                                    yamlConfiguration.save(fileConfig());
-                                    joueur.sendMessage("La region a bien été enregistré");
-                                } catch (IOException e) {
-                                    joueur.sendMessage("Region bug");
-                                    e.printStackTrace();
-                                }
+                                        ConfigurationSection locationfromConf = yamlConfiguration.getConfigurationSection(key+"."+locaString);
+                                        int x = locationfromConf.getInt(".x");
+                                        int y = locationfromConf.getInt(".y");
+                                        int z = locationfromConf.getInt(".z");
+                                        String world = locationfromConf.getString(".world");
+                                        Location l = new Location(Bukkit.getWorld(world),x,y,z);
+                                        Locations.add(l);
+                                    }
+                                    Cuboid cuboid = new Cuboid(Locations.get(0),Locations.get(1));
+                                    joueur.sendMessage("Cuboid créé !");
                                 break;
                             default:
                                 joueur.sendMessage("Commande incomplète");
