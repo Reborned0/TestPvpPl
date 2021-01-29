@@ -3,7 +3,7 @@ package fr.reborned.pvpbox.pluginlistener;
 import fr.reborned.pvpbox.Main;
 import fr.reborned.pvpbox.dbconnection.RequestSQL;
 import fr.reborned.pvpbox.joueur.Joueur;
-import fr.reborned.pvpbox.joueur.Teleportation;
+import fr.reborned.pvpbox.joueur.ManagerLocations;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -12,6 +12,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.*;
+import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -49,8 +50,9 @@ public class PluginListener extends Joueur implements Listener {
     public void onKill(PlayerDeathEvent e) {
         e.getDrops().clear();
         e.getEventName();
-        Teleportation teleportation = new Teleportation(e.getEntity().getPlayer());
-        teleportation.teleportPlayer();
+        ManagerLocations managerLocations = new ManagerLocations(e.getEntity().getPlayer());
+        managerLocations.teleportToSpawn(e.getEntity().getPlayer());
+        //Todo faire le +1 kill -0.5 exp mort et -1 mort
 
 
     }
@@ -86,10 +88,6 @@ public class PluginListener extends Joueur implements Listener {
         }
     }
 
-//    @EventHandler
-//    public void blockBreakEvent(BlockBreakEvent e){
-//        e.setCancelled(!e.getPlayer().isOp());
-//    }
 
     @EventHandler
     public void onInterract(PlayerInteractEvent e) {

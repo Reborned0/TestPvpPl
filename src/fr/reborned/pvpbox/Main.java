@@ -12,6 +12,7 @@ public class Main extends JavaPlugin {
         System.out.println("Plugin PVPBOX UP !");
         getCommand("pvp").setExecutor(new CommandPvpBox(this));
         getCommand("pvp").setTabCompleter(new CommandPvpBox(this));
+
         AjoutFichier();
 
 

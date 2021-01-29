@@ -19,6 +19,9 @@ import java.util.ArrayList;
 public abstract class Joueur {
 
     private int sizeofarrayArmor=0;
+    
+    private ManagerLocations managerLocations;
+    private Player player;
 
     private String grade;
     private Statistiques statistiques;
@@ -28,7 +31,14 @@ public abstract class Joueur {
         this.main=main;
     }
 
-
+    public boolean playerPvp(Player player){
+        boolean playerInArene = false;
+        this.managerLocations = new ManagerLocations(player);
+        if(managerLocations.playerIsInCuboid()){
+            playerInArene = true;
+        }
+        return playerInArene;
+    }
 
     public void playerjoining(Player unJoueur) {
         restoreHealthAndFood(unJoueur);

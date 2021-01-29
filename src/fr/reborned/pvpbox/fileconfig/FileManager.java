@@ -89,7 +89,6 @@ public class FileManager extends File {
 
     }
 
-
     public void saveInFile(String key, Location o){
         final YamlConfiguration configuration = YamlConfiguration.loadConfiguration(getFile());
 
